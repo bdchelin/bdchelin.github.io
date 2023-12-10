@@ -1,0 +1,73 @@
+/*
+booking_details data exploration
+
+Skills used: 
+BASIC DATA RETRIEVAL
+FILTERING AND SORTERING
+GROUPING AND AGGREGATION
+AGGREGATION FUNCTIONS
+JOIN OPERATIONS
+SUBQUERIES
+CONDITIONAL STATEMENTS
+DATA MODIFICATION
+VIEW CREATION
+STORED PROCEDURES
+
+
+*/
+
+
+-- BASIC DATA RETRIEVAL
+-- Select columns and data types in the table that we are going to work with
+SELECT 
+name AS column_name,
+TYPE_NAME(system_type_id) AS column_type,
+max_length,
+is_nullable
+FROM sys.columns
+WHERE object_id = OBJECT_ID(N'dbo.booking_details');
+
+
+-- Select number of rows we are going to work with
+SELECT COUNT (*)
+FROM SQLProjects.dbo.booking_details;
+
+Total_rows: 73804
+
+-- Select number of weeks to understand date range
+SELECT COUNT (DISTINCT week)
+FROM SQLProjects.dbo.booking_details;
+
+
+--GROUPING AND AGGREGATION
+-- Select number of countries per region and number of distinct regions
+SELECT 
+region,
+COUNT(DISTINCT country) AS number_countries
+FROM SQLProjects.dbo.booking_details
+GROUP BY region
+
+  
+-- Select number of bookings and sum of total revenue organized by region, country identifying what are the countries with higher number bookings and higher value amount in currency format
+SELECT 
+region,
+country,
+COUNT(*) AS number_records,
+FORMAT (SUM(net_gross_booking_value),'C') AS total_value
+FROM SQLProjects.dbo.booking_details
+GROUP BY region, country
+ORDER BY number_records DESC,total_value DESC
+
+  
+-- Select list of weeks with total bookings and sum of revenue to see tendency 
+SELECT 
+week,
+COUNT(*) AS number_records,
+FORMAT (SUM(net_gross_booking_value),'C') AS total_value
+FROM SQLProjects.dbo.booking_details
+GROUP BY week
+
+
+-- AGGREGATION FUNCTIONS
+-- Select MAX and MIN of number of bookings and total revenue by week
+
